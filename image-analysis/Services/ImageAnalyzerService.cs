@@ -1,19 +1,27 @@
-﻿using image_analysis.Model;
+﻿using image_analysis.Config;
+using image_analysis.Model;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+using Microsoft.Extensions.Options;
 
 namespace image_analysis.Services
 {
     public class ImageAnalyzerService : IComputerVisionService
     {
-        private const string SubscriptionKey = "";
-        private const string Endpoint = "";
+        private static string _subscriptionKey = "";
+        private static string _endpoint = "";
+
+        public ImageAnalyzerService(IOptions<ComputerVisionConfig> config)
+        {
+            _subscriptionKey = config.Value.SubscriptionKey;
+            _endpoint = config.Value.Endpoint;
+        }
 
         public ComputerVisionClient Authenticate()
         {
             var client =
-              new ComputerVisionClient(new ApiKeyServiceClientCredentials(SubscriptionKey))
-              { Endpoint = Endpoint };
+              new ComputerVisionClient(new ApiKeyServiceClientCredentials(_subscriptionKey))
+              { Endpoint = _endpoint };
             return client;
         }
 
